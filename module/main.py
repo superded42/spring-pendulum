@@ -27,7 +27,7 @@ print('Симуляция пружинного маятника')
 m=float(input('Масса шара в кг: ')or 0.2)
 k=float(input('Коэффициент жесткости пружины в Н/м: ') or 50)
 phi=float(input('Начальная фаза в рад: ') or 0)
-tim=float(input('Время наблюдения эксперимента в с: ') or 200)
+tim=float(input('Время наблюдения эксперимента в с: ') or 10)
 xm=float(input('Амплитуда: ') or 0.05)
 if m == 0 or k == 0:
     print('Неверные значения')
@@ -87,7 +87,7 @@ t=0
 tmas, vxmas, xmas = [], [], []
 next_target=0.0000000000000000000000001
 last_recorder=0
-max_time=200
+max_time=10
 while (abs(vx) > 0.00001 or abs(x) > 0.00001) and t <= max_time:
     data=rk4f(vx, t, C, rho, S, m, k, x, mu, g, dt, tmas, vxmas, xmas, next_target, last_recorder)
     vx = data['vx']
