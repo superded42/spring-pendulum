@@ -7,9 +7,9 @@
 Реальное движение смоделировано численным методом Рунге-Кутты 4-ого порядка.
 
 ---
-Язык Python
-[physics-formulas.md](./physics-formulas.md) - физический органон.
-[main.py](./module/main.py) - основной код (запускать тут).
+- Язык Python
+- [physics-formulas.md](./physics-formulas.md) - физический органон.
+- [main.py](./module/main.py) - основной код (запускать тут).
 
 ---
 ##  Лицензия
