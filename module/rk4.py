@@ -1,6 +1,15 @@
 # Метод Рунге-Кутты 4-ого порядка
+# Вспомогательная  функция. Задаем знак скорости
+def sign(vx):
+    if vx >0:
+        return(1)
+    elif vx <0:
+        return(-1)
+    else:
+        return(0)
+
 def rk4f(vx, t, C, rho, S, m, k, x, mu, g, dt, tmas, vxmas, xmas, next_target, last_recorder):
-    ax1 = -k*x/m+mu*g*x-C*rho*S*vx**2/(2*m)
+    ax1 = -k*x/m-mu*g*sign(vx)-C*rho*S*vx**2/(2*m)
 
     k1_vx = ax1 * dt
     k1_x = vx * dt
@@ -9,7 +18,7 @@ def rk4f(vx, t, C, rho, S, m, k, x, mu, g, dt, tmas, vxmas, xmas, next_target, l
     x_mid = x + 0.5 * k1_x
 
     vx2 = vx_mid 
-    ax2 = -k*x_mid/m+mu*g*x_mid-C*rho*S*vx2**2/(2*m)
+    ax2 = -k*x_mid/m-mu*g*sign(vx_mid)-C*rho*S*vx_mid**2/(2*m)
 
     k2_vx = ax2 * dt
     k2_x = vx_mid * dt
@@ -18,7 +27,7 @@ def rk4f(vx, t, C, rho, S, m, k, x, mu, g, dt, tmas, vxmas, xmas, next_target, l
     x_mid = x + 0.5 * k2_x
 
     vx3 = vx_mid 
-    ax3 = -k*x_mid/m+mu*g*x_mid-C*rho*S*vx3**2/(2*m)
+    ax3 = -k*x_mid/m-mu*g*sign(vx_mid)-C*rho*S*vx_mid**2/(2*m)
 
     k3_vx = ax3 * dt
     k3_x = vx_mid * dt
@@ -27,7 +36,7 @@ def rk4f(vx, t, C, rho, S, m, k, x, mu, g, dt, tmas, vxmas, xmas, next_target, l
     x_end = x + k3_x
 
     vx4 = vx_end 
-    ax4 = -k*x_mid/m+mu*g*x_mid-C*rho*S*vx4**2/(2*m)
+    ax4 = -k*x_end/m-mu*g*sign(vx_end)-C*rho*S*vx_end**2/(2*m)
 
     k4_vx = ax4 * dt
     k4_x = vx_end * dt
@@ -44,9 +53,9 @@ def rk4f(vx, t, C, rho, S, m, k, x, mu, g, dt, tmas, vxmas, xmas, next_target, l
         vxmas.append(vx)
         xmas.append(x)
 
-        print('В момент времени {t:.2f} с:')
-        print('Горизонтальная скорость: {vx:.2f}')
-        print('Абцисса: {x:.2f} м')
+        print(f'В момент времени {t:.5f} с:')
+        print(f'Горизонтальная скорость: {vx:.5f}')
+        print(f'Абцисса: {x:.5f} м')
 
 
     return{

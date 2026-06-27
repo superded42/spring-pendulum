@@ -19,9 +19,9 @@ def period_noresist(k,m):
 
 # Закон синуса и косинуса:
 def sin_noresist(xm, tao, omega, phi):
-    x=math.sin(omega*tao+phi)
+    x=xm*math.sin(omega*tao+phi)
     return(x)
 def cos_noresist(xm, t, omega, phi):
-    x=math.cos(omega*t+phi)
+    x=xm*math.cos(omega*t+phi)
     return(x)
 

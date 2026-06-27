@@ -10,12 +10,13 @@ from rk4 import rk4f
 #==================
 g=9.8
 C=0.47
-S=0.7
+S=0.02
 dt=0.0001
 vx=0
-mu=0.01
-rho=1
-x=1
+mu=0.05
+rho=1.15
+x=-0.05
+
 #==================
 
 # Симуляция движения пружинного маятника без сопротивления и трения
@@ -23,8 +24,8 @@ x=1
 print('Симуляция пружинного маятника')
 
 #Данные
-m=float(input('Масса шара в кг: ')or 4)
-k=float(input('Коэффициент жесткости пружины в Н/м: ') or 1)
+m=float(input('Масса шара в кг: ')or 0.2)
+k=float(input('Коэффициент жесткости пружины в Н/м: ') or 50)
 phi=float(input('Начальная фаза в рад: ') or 0)
 tim=float(input('Время наблюдения эксперимента в с: ') or 200)
 xm=float(input('Амплитуда: ') or 0.05)
@@ -86,7 +87,8 @@ t=0
 tmas, vxmas, xmas = [], [], []
 next_target=0.0000000000000000000000001
 last_recorder=0
-while abs(vx) > 1e-10 or abs(x) > 1e-10:
+max_time=200
+while (abs(vx) > 0.00001 or abs(x) > 0.00001) and t <= max_time:
     data=rk4f(vx, t, C, rho, S, m, k, x, mu, g, dt, tmas, vxmas, xmas, next_target, last_recorder)
     vx = data['vx']
     x = data['x']
@@ -96,6 +98,8 @@ while abs(vx) > 1e-10 or abs(x) > 1e-10:
     xmas = data['xmas']
     next_target = data.get('next_target', next_target)
     last_recorder = data.get('last_recorder', last_recorder)
+
+# График
 plt.theme("dark")
 plt.plot(data['tmas'], data['xmas'], marker='dot', color='orange')
 plt.title("Абцисса")
