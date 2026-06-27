@@ -8,8 +8,12 @@ def sign(vx):
     else:
         return(0)
 
-def rk4f(vx, t, C, rho, S, m, k, x, mu, g, dt, tmas, vxmas, xmas, next_target, last_recorder):
-    ax1 = -k*x/m-mu*g*sign(vx)-C*rho*S*vx**2/(2*m)
+def rk4f(vx, t, C, rho, S, m, k, x, mu, g, dt, tmas, vxmas, xmas, next_target, last_recorder, mu_s):
+    if abs(vx)<1e-9 and k*abs(x)<=mu_s*m*g:
+        ax1=0
+        vx=0
+    else:
+        ax1 = -k*x/m-mu*g*sign(vx)-sign(vx)*C*rho*S*vx**2/(2*m)
 
     k1_vx = ax1 * dt
     k1_x = vx * dt
@@ -17,27 +21,33 @@ def rk4f(vx, t, C, rho, S, m, k, x, mu, g, dt, tmas, vxmas, xmas, next_target, l
     vx_mid = vx + 0.5 * k1_vx
     x_mid = x + 0.5 * k1_x
 
-    vx2 = vx_mid 
-    ax2 = -k*x_mid/m-mu*g*sign(vx_mid)-C*rho*S*vx_mid**2/(2*m)
-
+    if abs(vx_mid)<1e-9 and k*abs(x_mid)<=mu_s*m*g:
+        ax2=0
+        vx_mid=0
+    else:
+        ax2 = -k*x_mid/m-mu*g*sign(vx_mid)-sign(vx_mid)*C*rho*S*vx_mid**2/(2*m)
     k2_vx = ax2 * dt
     k2_x = vx_mid * dt
 
     vx_mid = vx + 0.5 * k2_vx
     x_mid = x + 0.5 * k2_x
 
-    vx3 = vx_mid 
-    ax3 = -k*x_mid/m-mu*g*sign(vx_mid)-C*rho*S*vx_mid**2/(2*m)
-
+    if abs(vx_mid)<1e-9 and k*abs(x_mid)<=mu_s*m*g:
+        ax3=0
+        vx_mid=0
+    else:
+        ax3 = -k*x_mid/m-mu*g*sign(vx_mid)-sign(vx_mid)*C*rho*S*vx_mid**2/(2*m)
     k3_vx = ax3 * dt
     k3_x = vx_mid * dt
 
     vx_end = vx + k3_vx
     x_end = x + k3_x
 
-    vx4 = vx_end 
-    ax4 = -k*x_end/m-mu*g*sign(vx_end)-C*rho*S*vx_end**2/(2*m)
-
+    if abs(vx_end)<1e-9 and k*abs(x_end)<=mu_s*m*g:
+        ax4=0
+        vx_end=0
+    else:
+        ax4 = -k*x_end/m-mu*g*sign(vx_end)-sign(vx_end)*C*rho*S*vx_end**2/(2*m)
     k4_vx = ax4 * dt
     k4_x = vx_end * dt
 
@@ -53,9 +63,10 @@ def rk4f(vx, t, C, rho, S, m, k, x, mu, g, dt, tmas, vxmas, xmas, next_target, l
         vxmas.append(vx)
         xmas.append(x)
 
-        print(f'В момент времени {t:.5f} с:')
+        print(f'В момент времени {round(t)} с:')
         print(f'Горизонтальная скорость: {vx:.5f}')
         print(f'Абцисса: {x:.5f} м')
+        print()
 
 
     return{

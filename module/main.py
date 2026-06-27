@@ -6,16 +6,19 @@ from physics import period_noresist
 from physics import sin_noresist
 from physics import cos_noresist
 from rk4 import rk4f
+from physics import rho_fun
+from physics import s_fun
 
 #==================
-g=9.8
-C=0.47
-S=0.02
+#Константы
+g = 9.80665
+Mo = 28.9644 * 10**(-3)
+Mh = 18.0152 * 10**(-3)
+R = 8.31446261815324
+C = 0.47
+koef = 101325 / 760
 dt=0.0001
 vx=0
-mu=0.05
-rho=1.15
-x=-0.05
 
 #==================
 
@@ -25,10 +28,10 @@ print('Симуляция пружинного маятника')
 
 #Данные
 m=float(input('Масса шара в кг: ')or 0.2)
-k=float(input('Коэффициент жесткости пружины в Н/м: ') or 50)
+k=float(input('Коэффициент жесткости пружины в Н/м: ') or 30)
 phi=float(input('Начальная фаза в рад: ') or 0)
-tim=float(input('Время наблюдения эксперимента в с: ') or 10)
-xm=float(input('Амплитуда: ') or 0.05)
+tim=float(input('Время наблюдения эксперимента в с: ') or 20)
+xm=float(input('Амплитуда: ') or -0.05)
 if m == 0 or k == 0:
     print('Неверные значения')
     exit()
@@ -82,14 +85,29 @@ print()
 
 #=================================================================
 #То же самое, только с учетом сил сопротивления движения
-print('Данные с учетом сил сопротивления: ')
+print('Учет сил сопртивления движению: ')
+print('Вводите значения, приближенные к реальности')
+print()
+mu=float(input('Введите коэффициеет сухого трения (default 0.15): ') or 0.15)
+mu_s=1.3*mu #Коэффициент трения покоя(упрощенный)
+r=float(input('Введите радиус шара в м: ') or 0.01)
+tempC=float(input('Введите температуру воздуха в градусах Цельсия: ') or 22)
+rt_st=float(input('Введите атмосферное давление в мм. рт. ст.: ') or 760)
+RH=float(input('Введите влажность воздуха в %: ') or 60)
+
+S=s_fun(r)
+rho=rho_fun(tempC, rt_st, RH, R, Mo, Mh, koef)
+
+x=float(input('Введите расстояние от точки равновесия системы: ') or -0.05)
+
 t=0
 tmas, vxmas, xmas = [], [], []
-next_target=0.0000000000000000000000001
+next_target=0.000000000000000001
 last_recorder=0
-max_time=10
-while (abs(vx) > 0.00001 or abs(x) > 0.00001) and t <= max_time:
-    data=rk4f(vx, t, C, rho, S, m, k, x, mu, g, dt, tmas, vxmas, xmas, next_target, last_recorder)
+max_time=20
+while (abs(vx) > 1e-9 or k * abs(x) > mu_s * m * g) and t <= max_time:
+    data=rk4f(vx, t, C, rho, S, m, k, x, mu, g, dt, tmas, vxmas, xmas, next_target, last_recorder, mu_s)
+    
     vx = data['vx']
     x = data['x']
     t = data['t']

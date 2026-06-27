@@ -25,3 +25,22 @@ def cos_noresist(xm, t, omega, phi):
     x=xm*math.cos(omega*t+phi)
     return(x)
 
+# Блок 2 - учет сил сопротивления движению
+# ==============================================
+# Высчитываем rho - плотность воздуха
+def rho_fun(tempC, rt_st, RH, R, Mo, Mh, koef):
+    if tempC >= 0:
+        E=6.1121*math.exp((17.502*tempC)/(240.97+tempC))
+    else:
+        E=6.1115*math.exp((22.452*tempC)/(272.55+tempC))
+    E=E*100
+    e=E*RH/100 # Реальное давление пара
+    temp = tempC + 273.15 # Перевод температуры в Кельвины
+    p = rt_st*koef # Перевод мм рт. ст. в Па
+    rho = ((p-e)*Mo+e*Mh)/(R*temp) # Плотность воздуха
+    return(rho)
+
+# Площадь лобового столкновения шара
+def s_fun(r):
+    S=math.pi*r**2
+    return(S)
