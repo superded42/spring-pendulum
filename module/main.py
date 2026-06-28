@@ -8,6 +8,7 @@ from physics import cos_noresist
 from rk4 import rk4f
 from physics import rho_fun
 from physics import s_fun
+from physics import speed_noresist
 
 #==================
 #Константы
@@ -27,11 +28,13 @@ vx=0
 print('Симуляция пружинного маятника')
 
 #Данные
-m=float(input('Масса шара в кг: ')or 0.2)
-k=float(input('Коэффициент жесткости пружины в Н/м: ') or 30)
+m=float(input('Масса шара в кг: ')or 0.05)
+k=float(input('Коэффициент жесткости пружины в Н/м: ') or 10)
 phi=float(input('Начальная фаза в рад: ') or 0)
-tim=float(input('Время наблюдения эксперимента в с: ') or 20)
-xm=float(input('Расстояние от положения равновесия системы в м: ') or -0.05)
+tim=float(input('Время наблюдения эксперимента в с: ') or 2)
+xm=float(input('Изначальное расстояние от положения равновесия системы в м: ') or 0.1)
+if xm==0:
+        A=float(input('Амплитуда колебаний в м: '))
 print()
 if m == 0 or k == 0:
     print('Неверные значения')
@@ -41,7 +44,7 @@ if m == 0 or k == 0:
 times = []
 X=[]
 acc=[]
-steps=100
+steps=200
 
 # tao - момент времени
 omega=frequency_noresist(k, m)
@@ -51,9 +54,7 @@ T=period_noresist(k, m)
 for i in range (steps + 1):
     tao=tim*i/steps
     if xm == 0:
-        x=sin_noresist(xm, tao, omega, phi)
-        print('Пока программа не умеет решать при таких данных')
-        exit()
+        x=sin_noresist(tao, omega, phi, A)
     else:
         x=cos_noresist(xm, tao, omega, phi)
     ax=acceleration_noresist(k, m, x)
@@ -96,9 +97,9 @@ print()
 print('Учет сил сопртивления движению: ')
 print('Вводите значения, приближенные к реальности')
 print()
-mu=float(input('Введите коэффициеет сухого трения (default 0.15): ') or 0.15)
+mu=float(input('Введите коэффициеет сухого трения (default 0.15): ') or 0.01)
 mu_s=1.3*mu #Коэффициент трения покоя(упрощенный)
-r=float(input('Введите радиус шара в м: ') or 0.01)
+r=float(input('Введите радиус шара в м: ') or 0.02)
 tempC=float(input('Введите температуру воздуха в градусах Цельсия: ') or 22)
 rt_st=float(input('Введите атмосферное давление в мм. рт. ст.: ') or 760)
 RH=float(input('Введите влажность воздуха в %: ') or 60)
@@ -106,13 +107,15 @@ RH=float(input('Введите влажность воздуха в %: ') or 60)
 S=s_fun(r)
 rho=rho_fun(tempC, rt_st, RH, R, Mo, Mh, koef)
 
-x=float(input('Введите расстояние от точки равновесия системы: ') or -0.05)
+x=float(input('Введите расстояние от точки равновесия системы: ') or 0.05)
+if x == 0:
+    vx=float(input('Введите скорость, с которой тело пролетает положение равновесия в м/с: ') or 20)
 
 t=0
 tmas, vxmas, xmas = [], [], []
 next_target=0.000000000000000001
 last_recorder=0
-max_time=20
+max_time=float(input('Время наблюдения эксперимента в с: ') or 30)
 while (abs(vx) > 1e-9 or k * abs(x) > mu_s * m * g) and t <= max_time:
     data=rk4f(vx, t, C, rho, S, m, k, x, mu, g, dt, tmas, vxmas, xmas, next_target, last_recorder, mu_s)
     

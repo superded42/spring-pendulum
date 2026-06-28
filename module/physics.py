@@ -18,12 +18,18 @@ def period_noresist(k,m):
     return(T)
 
 # Закон синуса и косинуса:
-def sin_noresist(xm, tao, omega, phi):
-    x=xm*math.sin(omega*tao+phi)
+def sin_noresist(tao, omega, phi, A):
+    x=A*math.sin(omega*tao+phi)
     return(x)
 def cos_noresist(xm, t, omega, phi):
     x=xm*math.cos(omega*t+phi)
     return(x)
+
+def speed_noresist(omega, xm, A):
+    if xm==0:
+        vx=omega*A*cos(omega*tao)
+    else:
+        vx=-omega*A*sin(omega*tao)
 
 # Блок 2 - учет сил сопротивления движению
 # ==============================================
