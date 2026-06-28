@@ -52,6 +52,8 @@ for i in range (steps + 1):
     tao=tim*i/steps
     if xm == 0:
         x=sin_noresist(xm, tao, omega, phi)
+        print('Пока программа не умеет решать при таких данных')
+        exit()
     else:
         x=cos_noresist(xm, tao, omega, phi)
     ax=acceleration_noresist(k, m, x)
