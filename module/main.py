@@ -31,7 +31,8 @@ m=float(input('Масса шара в кг: ')or 0.2)
 k=float(input('Коэффициент жесткости пружины в Н/м: ') or 30)
 phi=float(input('Начальная фаза в рад: ') or 0)
 tim=float(input('Время наблюдения эксперимента в с: ') or 20)
-xm=float(input('Амплитуда: ') or -0.05)
+xm=float(input('Расстояние от положения равновесия системы в м: ') or -0.05)
+print()
 if m == 0 or k == 0:
     print('Неверные значения')
     exit()
@@ -49,7 +50,10 @@ T=period_noresist(k, m)
 #Вычислительный процесс
 for i in range (steps + 1):
     tao=tim*i/steps
-    x=sin_noresist(xm, tao, omega, phi)
+    if xm == 0:
+        x=sin_noresist(xm, tao, omega, phi)
+    else:
+        x=cos_noresist(xm, tao, omega, phi)
     ax=acceleration_noresist(k, m, x)
     
     if tao <= tim:
@@ -62,7 +66,6 @@ for i in range (steps + 1):
         print(f'Х равен: {x:.2f} м ')
         print()
 
-print(f'Период колебаний: {T:.2f} с')
 # График
 plt.theme("dark")
 plt.plot(times, X, marker='dot', color='orange')
@@ -82,6 +85,9 @@ plt.plotsize(80, 30)
 plt.show()
 plt.clf()
 print()
+print(f'Период колебаний: {T:.2f} с')
+print()
+
 
 #=================================================================
 #То же самое, только с учетом сил сопротивления движения
